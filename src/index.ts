@@ -9,16 +9,21 @@ dotenv.config();
 
 const app = express();
 
+// Middleware para CORS
 app.use(cors({
-  origin: `${process.env.VITE_FRONTEND_URL}` 
+  origin: `${process.env.VITE_FRONTEND_URL}`
 }));
 
+// Conexão com o banco de dados
 connectDB();
 
+// Middleware para aceitar JSON
 app.use(express.json());
+
+// Rotas de autenticação
 app.use('/api/auth', authRoutes);
 
-
+// Exportando o handler serverless para Vercel
 export default (req: VercelRequest, res: VercelResponse) => {
-  app(req, res);
+  return app(req, res);  
 };
