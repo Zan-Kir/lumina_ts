@@ -1,15 +1,23 @@
 import express from 'express';
-import userRoutes from './routes/user';
 import cors from 'cors';
+import connectDB from './config/database';
+import authRoutes from './routes/userRoutes';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
-    app.use(cors({
-        origin: "type-script-express.vercel.app"
-    }));
+app.use(cors({
+    origin: `${process.env.VITE_FRONTEND_URL}`
+}));
 
-app.use("/api/v1", userRoutes);
+connectDB();
 
-app.listen(3000, () =>{
-    console.info(`Server is running at Port 3000`);
-});
+app.use(express.json());
+
+app.use('/api/auth', authRoutes);
+
+// eslint-disable-next-line no-undef
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
