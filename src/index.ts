@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectDB from './config/database';
-import authRoutes from './routes/userRoutes';
+import routes from './config/routes';
 import dotenv from 'dotenv';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
@@ -20,8 +20,8 @@ connectDB();
 // Middleware para aceitar JSON
 app.use(express.json());
 
-// Rotas de autenticação
-app.use('/api/auth', authRoutes);
+// Rotas
+app.use('/api/v1', routes);
 
 // Exportando o handler serverless para Vercel
 export default (req: VercelRequest, res: VercelResponse) => {

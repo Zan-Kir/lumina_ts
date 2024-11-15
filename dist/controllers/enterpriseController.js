@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEmpresa = exports.updateEmpresa = exports.getEmpresa = exports.checkAuth = exports.login = exports.register = void 0;
-const empresaModel_1 = require("../models/empresaModel");
+const enterpriseModel_1 = require("../models/enterpriseModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nomeEmpresa, email, password } = req.body;
     try {
         // Verifica se o usuário já existe
-        const existingEmpresa = yield empresaModel_1.Empresa.findOne({ "auth.email": email });
+        const existingEmpresa = yield enterpriseModel_1.Empresa.findOne({ "auth.email": email });
         if (existingEmpresa) {
             res.status(400).json({ error: "User already exists" });
             return;
@@ -28,7 +28,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // Criptografa a senha
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         // Cria uma nova empresa com apenas os dados de autenticação
-        const empresa = new empresaModel_1.Empresa({
+        const empresa = new enterpriseModel_1.Empresa({
             auth: {
                 nomeEmpresa,
                 email,
@@ -51,7 +51,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
         // Busca a empresa pelo email da empresa
-        const empresa = yield empresaModel_1.Empresa.findOne({ "auth.email": email });
+        const empresa = yield enterpriseModel_1.Empresa.findOne({ "auth.email": email });
         if (!empresa || !empresa.auth) {
             res.status(401).json({ error: "User not found" });
             return;
@@ -83,7 +83,7 @@ const checkAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // Verifica e decodifica o token JWT
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         // Busca a empresa pelo ID (extraído do token)
-        const empresa = yield empresaModel_1.Empresa.findById(decoded.empresaId);
+        const empresa = yield enterpriseModel_1.Empresa.findById(decoded.empresaId);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;
@@ -101,7 +101,7 @@ const getEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { empresaId } = req.params;
     try {
         // Busca a empresa pelo ID
-        const empresa = yield empresaModel_1.Empresa.findById(empresaId);
+        const empresa = yield enterpriseModel_1.Empresa.findById(empresaId);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;
@@ -120,7 +120,7 @@ const updateEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const { nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ, endereco, redesSociais, mensagens, servicos, userImg, local } = req.body;
     try {
         // Atualiza os dados da empresa com os campos fornecidos
-        const updatedEmpresa = yield empresaModel_1.Empresa.findByIdAndUpdate(empresaId, {
+        const updatedEmpresa = yield enterpriseModel_1.Empresa.findByIdAndUpdate(empresaId, {
             nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ,
             endereco, redesSociais, mensagens, servicos, userImg, local
         }, { new: true } // Retorna o documento atualizado
@@ -141,7 +141,7 @@ exports.updateEmpresa = updateEmpresa;
 const deleteEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { empresaId } = req.params;
     try {
-        const empresa = yield empresaModel_1.Empresa.findByIdAndDelete(empresaId);
+        const empresa = yield enterpriseModel_1.Empresa.findByIdAndDelete(empresaId);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;
