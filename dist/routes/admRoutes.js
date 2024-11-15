@@ -10,5 +10,5 @@ const router = express_1.default.Router();
 // Rota para validar login de administrador
 router.post("/admin/login", admController_1.validarAdmin);
 router.post("/admin/primeiro", admController_2.adicionarPrimeiroAdmin);
-router.post("/admin", admController_2.adicionarAdmin);
+router.post("/admin", admController_1.verificarAutenticacao, admController_2.adicionarAdmin);
 exports.default = router;
