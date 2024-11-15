@@ -10,13 +10,17 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+// Middleware para CORS
 app.use((0, cors_1.default)({
-    origin: `${process.env.VITE_FRONTEND_URL}` // Sua URL de frontend
+    origin: `${process.env.VITE_FRONTEND_URL}`
 }));
+// Conexão com o banco de dados
 (0, database_1.default)();
+// Middleware para aceitar JSON
 app.use(express_1.default.json());
+// Rotas de autenticação
 app.use('/api/auth', userRoutes_1.default);
-// Exportando a função serverless que será chamada pelo Vercel
+// Exportando o handler serverless para Vercel
 exports.default = (req, res) => {
-    app(req, res); // Express processa a requisição
+    return app(req, res);
 };
