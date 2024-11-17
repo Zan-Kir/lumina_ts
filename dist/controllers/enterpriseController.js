@@ -100,10 +100,11 @@ const checkAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.checkAuth = checkAuth;
 const getEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { empresaId } = req.params;
+    const { id } = req.params;
     try {
         // Busca a empresa pelo ID
-        const empresa = yield enterpriseModel_1.Empresa.findById(empresaId);
+        const empresa = yield enterpriseModel_1.Empresa.findById(id);
+        console.log(empresa);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;
@@ -118,11 +119,11 @@ const getEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.getEmpresa = getEmpresa;
 const updateEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { empresaId } = req.params; // O ID da empresa será passado na URL
+    const { id } = req.params; // O ID da empresa será passado na URL
     const { nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ, endereco, redesSociais, mensagens, servicos, userImg, local } = req.body;
     try {
         // Atualiza os dados da empresa com os campos fornecidos
-        const updatedEmpresa = yield enterpriseModel_1.Empresa.findByIdAndUpdate(empresaId, {
+        const updatedEmpresa = yield enterpriseModel_1.Empresa.findByIdAndUpdate(id, {
             nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ,
             endereco, redesSociais, mensagens, servicos, userImg, local
         }, { new: true } // Retorna o documento atualizado
@@ -141,9 +142,9 @@ const updateEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.updateEmpresa = updateEmpresa;
 const deleteEmpresa = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { empresaId } = req.params;
+    const { id } = req.params;
     try {
-        const empresa = yield enterpriseModel_1.Empresa.findByIdAndDelete(empresaId);
+        const empresa = yield enterpriseModel_1.Empresa.findByIdAndDelete(id);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;

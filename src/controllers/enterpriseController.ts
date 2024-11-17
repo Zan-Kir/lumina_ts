@@ -108,12 +108,14 @@ export const checkAuth = async (req: Request, res: Response, next: NextFunction)
     res.status(401).json({ error: "Invalid token" });
   }
 };
+
 export const getEmpresa = async (req: Request, res: Response): Promise<void> => {
-  const { empresaId } = req.params;
+  const { id } = req.params;
 
   try {
     // Busca a empresa pelo ID
-    const empresa = await Empresa.findById(empresaId);
+    const empresa = await Empresa.findById(id);
+    console.log(empresa);
 
     if (!empresa) {
       res.status(404).json({ error: "Empresa not found" });
@@ -129,7 +131,7 @@ export const getEmpresa = async (req: Request, res: Response): Promise<void> => 
 };
 
 export const updateEmpresa = async (req: Request, res: Response): Promise<void> => {
-  const { empresaId } = req.params; // O ID da empresa será passado na URL
+  const { id } = req.params; // O ID da empresa será passado na URL
   const {
     nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ,
     endereco, redesSociais, mensagens, servicos, userImg, local
@@ -138,7 +140,7 @@ export const updateEmpresa = async (req: Request, res: Response): Promise<void> 
   try {
     // Atualiza os dados da empresa com os campos fornecidos
     const updatedEmpresa = await Empresa.findByIdAndUpdate(
-      empresaId,
+      id,
       {
         nomeEmpresa, telefoneEmpresa, emailEmpresa, siteEmpresa, tipoEmpresa, CNPJ,
         endereco, redesSociais, mensagens, servicos, userImg, local
@@ -161,10 +163,10 @@ export const updateEmpresa = async (req: Request, res: Response): Promise<void> 
 
 
 export const deleteEmpresa = async (req: Request, res: Response): Promise<void> => {
-  const { empresaId } = req.params;
+  const { id } = req.params;
 
   try {
-    const empresa = await Empresa.findByIdAndDelete(empresaId);
+    const empresa = await Empresa.findByIdAndDelete(id);
 
     if (!empresa) {
       res.status(404).json({ error: "Empresa not found" });
