@@ -25,15 +25,7 @@ const EmpresaSchema = new mongoose.Schema({
     instagram: { type: String },
     linkedin: { type: String },
   },
-  mensagens: [
-    {
-      idMsg: { type: Number },
-      idEmpresaEnvia: { type: Number },
-      idEmpresaRecebe: { type: Number },
-      mensagem: { type: String },
-      data: { type: Date },
-    },
-  ],
+  // mensagens: [{ type: mongoose.Schema.Types.ObjectId, ref: "Mensagem" }],
   servicos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Servico" }],
   userImg: { type: String },
   local: {
