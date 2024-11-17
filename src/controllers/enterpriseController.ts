@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { Empresa } from "../models/enterpriseModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -78,7 +78,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const checkAuth = async (req: Request, res: Response): Promise<void> => {
+export const checkAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1]; // Extraímos o token do cabeçalho
 
   if (!token) {
@@ -90,7 +90,7 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
     // Verifica e decodifica o token JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { empresaId: string };
 
-    // Busca a empresa pelo ID (extraído do token)
+    // Busca a empresa pelo ID do token
     const empresa = await Empresa.findById(decoded.empresaId);
 
     if (!empresa) {
@@ -98,14 +98,16 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Retorna os dados da empresa
-    res.status(200).json({ empresa });
+    // Adiciona os dados da empresa ao objeto `req` para uso nas rotas subsequentes
+    req.body.authenticatedEmpresa = empresa;
+
+    // Passa o controle para a próxima função de middleware ou rota
+    next();
   } catch (error) {
     console.error("Error verifying token:", error);
     res.status(401).json({ error: "Invalid token" });
   }
 };
-
 export const getEmpresa = async (req: Request, res: Response): Promise<void> => {
   const { empresaId } = req.params;
 

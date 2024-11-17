@@ -72,7 +72,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
-const checkAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const checkAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1]; // Extraímos o token do cabeçalho
     if (!token) {
@@ -82,14 +82,16 @@ const checkAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Verifica e decodifica o token JWT
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        // Busca a empresa pelo ID (extraído do token)
+        // Busca a empresa pelo ID do token
         const empresa = yield enterpriseModel_1.Empresa.findById(decoded.empresaId);
         if (!empresa) {
             res.status(404).json({ error: "Empresa not found" });
             return;
         }
-        // Retorna os dados da empresa
-        res.status(200).json({ empresa });
+        // Adiciona os dados da empresa ao objeto `req` para uso nas rotas subsequentes
+        req.body.authenticatedEmpresa = empresa;
+        // Passa o controle para a próxima função de middleware ou rota
+        next();
     }
     catch (error) {
         console.error("Error verifying token:", error);
